@@ -6,7 +6,7 @@ utils = IPFSUtils()
 
 @app.route("/api", methods=["GET"])
 def index():
-    return "Hi there"
+    return "Hi there\n"
 
 
 @app.route("/api/make_thread", methods=["POST"])
@@ -17,12 +17,13 @@ def make_thread():
     title = request.form["title"]
     body = escape(request.form["body"])
     utils.make_thread(title, body)
-    return "Done"
+    return "Done\n"
 
 
 @app.route("/api/get_threads", methods=["GET"])
 def get_threads():
-    return "All threads"
+    threads_json = utils.get_threads()
+    return jsonify(threads_json)
 
 
 if __name__ == "__main__":

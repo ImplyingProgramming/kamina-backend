@@ -10,6 +10,7 @@ class IPFSUtils:
         self.ipfs_instance = ipfsapi.connect()
 
     def make_thread(self, title, body):
+        # TODO: Make add images to ipfs functionality
         # We need to make a temporary file, then add it to ipfs
         # use json for this
         ipfs = self.ipfs_instance
@@ -33,3 +34,15 @@ class IPFSUtils:
             ipfs.files_write(thread_dir + "info.json", io.BytesIO(f.read()), create=True)
         # Now delete file
         os.remove(json_file)
+
+    # Return a list of dictionaries containing the thread information
+    def get_threads(self) -> list:
+        ipfs = self.ipfs_instance
+        threads_list = []
+        threads_ids = ipfs.files_ls("/threads")
+        for thread_id in threads_ids["Entries"]:
+            thread_mfs_path = "/threads/{}".format(thread_id["Name"])
+            thread_info_file = ipfs.files_ls(thread_mfs_path)["Entries"][0]["Name"]
+            json_file = json.loads(ipfs.files_read(thread_mfs_path + "/" + thread_info_file))
+            threads_list.append(json_file)
+        return threads_list
