@@ -9,7 +9,7 @@ class IPFSUtils:
     def __init__(self):
         self.ipfs_instance = ipfsapi.connect()
 
-    def make_thread(self, title, body):
+    def make_thread(self, title, body) -> None:
         # TODO: Make add images to ipfs functionality
         # We need to make a temporary file, then add it to ipfs
         # use json for this

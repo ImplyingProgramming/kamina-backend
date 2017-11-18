@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, escape
+from flask import Flask, request, jsonify, escape, Response
 from ipfs_utils import IPFSUtils
 app = Flask(__name__)
 utils = IPFSUtils()
@@ -12,12 +12,14 @@ def index():
 @app.route("/api/make_thread", methods=["POST"])
 def make_thread():
     """
-    We need the title of the thread and the thread body
+    We need the title of the thread, the thread body and possibly
+    some media, for now just an image
+    TODO: add thumbnail functionality
     """
     title = request.form["title"]
-    body = escape(request.form["body"])
+    body = escape(request.form["body"])  # This escapes wanted characters, fix
     utils.make_thread(title, body)
-    return "Done\n"
+    return Response(status=201)
 
 
 @app.route("/api/get_threads", methods=["GET"])
