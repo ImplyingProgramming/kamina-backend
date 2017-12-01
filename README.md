@@ -1,5 +1,5 @@
 # Kamina
-<!-- ![Kamina_Logo](./kamina_logo.svg)-->
+![Kamina_Logo](./kamina_logo.svg)  
 A Kamina backend using python and IPFS
 <br>
 ## What is Kamina?
@@ -25,7 +25,7 @@ Since all files are public once we add them to the network [proof](https://ipfs.
 
 #### The frontend issue
 Since we don't have a frontend (yet) one can use curl in order to test the backend
-```
+```sh
 # Create a thread
 curl -d "title=Why is C++ the best language&body=and why you can't argue with me" http://127.0.0.1:1337/api/make_thread
 # Get all threads
