@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, escape, Response
+from flask_cors import CORS
 from ipfs_utils import IPFSUtils
 app = Flask(__name__)
+CORS(app)
 utils = IPFSUtils()
 
 
@@ -17,7 +19,7 @@ def make_thread():
     TODO: add thumbnail functionality
     """
     title = request.form["title"]
-    body = escape(request.form["body"])  # This escapes wanted characters, fix
+    body = request.form["body"]  # This escapes wanted characters, fix
     utils.make_thread(title, body)
     return Response(status=201)
 
