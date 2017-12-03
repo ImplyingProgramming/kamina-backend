@@ -18,8 +18,8 @@ def make_thread():
     some media, for now just an image
     TODO: add thumbnail functionality
     """
-    title = escape(request.form["title"])
-    body = escape(request.form["body"])
+    title = escape(request.json["title"])
+    body = escape(request.json["body"])
     thread_id = utils.make_thread(title, body)
     return thread_id
 
