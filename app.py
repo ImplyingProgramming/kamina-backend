@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify, escape, Response
+from flask import Flask, request, jsonify, escape
 from flask_cors import CORS
-from ipfs_utils import IPFSUtils
+from utils.ipfs import IPFSUtils
 app = Flask(__name__)
 CORS(app)
 utils = IPFSUtils()
@@ -18,10 +18,10 @@ def make_thread():
     some media, for now just an image
     TODO: add thumbnail functionality
     """
-    title = request.form["title"]
-    body = request.form["body"]  # This escapes wanted characters, fix
-    utils.make_thread(title, body)
-    return Response(status=201)
+    title = escape(request.form["title"])
+    body = escape(request.form["body"])
+    thread_id = utils.make_thread(title, body)
+    return thread_id
 
 
 @app.route("/api/get_threads", methods=["GET"])
