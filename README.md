@@ -34,3 +34,36 @@ curl http://127.0.0.1:1337/api/get_threads
 
 #### Further reading
 [python-ipfs api documentation](https://ipfs.io/ipns/QmZ86ow1byeyhNRJEatWxGPJKcnQKG7s51MtbHdxxUddTH/Software/Python/ipfsapi/)
+
+## API Documentation
+----
+### /api/make_thread 
+Make a new thread  
+
+__Arguments:__
+* title: Thread title
+* body: Thread body/content/text
+* image (optional and TODO): A list that contains the URL for an image and its thumbnail
+
+__Returns:__  
+Nothing
+
+----
+### /api/get_threads
+Get all threads
+
+__Arguments:__
+* None (for now, probably)
+
+__Returns:__  
+A JSON-formatted list containing all the existing threads
+
+----
+### /api/upload_image
+Upload an image to the IPFS node, and create a thumbnail of it
+
+__Arguments:__  
+* file (multipart/form-data)he file you want to upload
+
+__Returns:__  
+A JSON-formatted list containing IPFS hashes of both the file and its thumbnail
