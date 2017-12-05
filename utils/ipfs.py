@@ -1,9 +1,7 @@
 import ipfsapi
-import os
 import json
 import uuid
 import io
-import datetime
 
 
 class IPFSUtils:
@@ -14,26 +12,19 @@ class IPFSUtils:
         # TODO: Make add images to ipfs functionality
         # We need to make a temporary json file, then add it to ipfs
         ipfs = self.ipfs_instance
-        thread_id = str(uuid.uuid4())
-        working_dir = os.path.dirname(os.path.realpath(__file__))
-        json_file = working_dir + "/tmp/info.json"
+        thread_id = str(uuid.uuid4())  # Maybe we could use other ways of identifying threads
         thread_dir = "/threads/" + thread_id + "/"
         thread_data = {
             "title": title,
             "body": body,
             "id": thread_id
         }
-        with open(json_file, "w+") as f:
-            json.dump(thread_data, f, indent=4)
-        # Add file to ipfs
-        ipfs.add(json_file)
-        # Create a file for the thread in the file system
+        # Dump the thread_data list to a string for thread uploading to ipfs
+        json_str = json.dumps(thread_data, indent=4)
+        # Create a directory for the thread in the MFS
         ipfs.files_mkdir(thread_dir)
-        # Now add it to the /threads directory in ipfs
-        with open(json_file, "rb") as f:
-            ipfs.files_write(thread_dir + "info.json", io.BytesIO(f.read()), create=True)
-        # Now delete file
-        os.remove(json_file)
+        # Now add the thread information as a file info.json to the thread_dir
+        ipfs.files_write(thread_dir + "info.json", io.BytesIO(str.encode(json_str)), create=True)
         return thread_id
 
     # Return a list of dictionaries containing the threads information
