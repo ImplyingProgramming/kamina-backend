@@ -46,7 +46,7 @@ __Arguments:__
 * image (optional and TODO): A list that contains the URL for an image and its thumbnail
 
 __Returns:__  
-Nothing
+The ID of the newly created thread in uuidv4 format (this will probably change)
 
 ----
 ### /api/get_threads
