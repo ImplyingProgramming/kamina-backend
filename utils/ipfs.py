@@ -29,14 +29,14 @@ class IPFSUtils:
 
     # TODO: Check for only images (mimetype)
     # We suppose we have a directory in the MFS called /images
-    def upload_image(self, image):
+    # The image should be a File like object
+    def upload_image(self, image, filename):
         ipfs = self.ipfs_instance
         # Some hand variables
         images_dir = "/images/"
-        filename = image.filename
         img_location = images_dir + filename
         # Add the file to the MFS
-        ipfs.files_write(img_location, io.BytesIO(image.stream.read()), create=True)
+        ipfs.files_write(img_location, io.BytesIO(image), create=True)
         # Get image information from the MFS
         img_mfs = ipfs.files_stat(img_location)
         return img_mfs["Hash"]
