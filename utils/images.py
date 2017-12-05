@@ -1,6 +1,11 @@
 from PIL import Image
-from werkzeug.datastructures import FileStorage
+import io
 
 
-def create_thumbnail(image):
-    pass
+def create_thumbnail(image) -> bytes:
+    size = (120, 120)
+    im = Image.open(image)
+    im.thumbnail(size)
+    bytes_img = io.BytesIO()
+    im.save(bytes_img, "JPEG")
+    return bytes_img.getvalue()
