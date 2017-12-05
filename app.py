@@ -25,17 +25,22 @@ def make_thread():
     return "test"
 
 
-# This should return the ipfs hash of the image and the thumbnail
-# TODO: Make thumbnail creation... somehow
 @app.route("/api/upload_image", methods=["POST"])
 def upload_image():
-    image = request.files["file"]
-    original_img_hash = utils.upload_image(image)
-    thumbnail = create_thumbnail(image)
-    thumbnail_hash = utils.upload_image(thumbnail)
+    image_file = request.files["file"]
+    # Original image data
+    image_extension = image_file.filename.split(".")[-1]
+    image_basename = ".".join(image_file.filename.split(".")[0:-1])
+    image_filename = image_basename + "." + image_extension
+    image_ipfs_hash = utils.upload_image(image_file.read(), image_filename)
+    # Thumbnail data
+    thumbnail_file = create_thumbnail(image_file)
+    thumbnail_filename = image_basename + "-thumbnail.jpeg"
+    thumbnail_ipfs_hash = utils.upload_image(thumbnail_file, thumbnail_filename)
+    # thumbnail_ipfs_hash = "test"
     response = {
-        "original": original_img_hash,
-        "thumbnail": thumbnail_hash
+        "original": image_ipfs_hash,
+        "thumbnail": thumbnail_ipfs_hash
     }
     return jsonify(response)
 
