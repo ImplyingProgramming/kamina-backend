@@ -27,6 +27,20 @@ class IPFSUtils:
         ipfs.files_write(thread_dir + "info.json", io.BytesIO(str.encode(json_str)), create=True)
         return thread_id
 
+    # TODO: Check for only images (mimetype)
+    # We suppose we have a directory in the MFS called /images
+    def upload_image(self, image):
+        ipfs = self.ipfs_instance
+        # Some hand variables
+        images_dir = "/images/"
+        filename = image.filename
+        img_location = images_dir + filename
+        # Add the file to the MFS
+        ipfs.files_write(img_location, io.BytesIO(image.stream.read()), create=True)
+        # Get image information from the MFS
+        img_mfs = ipfs.files_stat(img_location)
+        return img_mfs["Hash"]
+
     # Return a list of dictionaries containing the threads information
     # TODO: Return sorted list (new threads, bumped threads, etc...)
     def get_threads(self) -> list:
