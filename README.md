@@ -42,7 +42,7 @@ There are 5 prerequisites for this tutorial:
 * pip3
 * ipfs (see https://ipfs.io/docs/install/)  
 * The front end repository cloned (https://github.com/ImplyingProgramming/kamina-frontend)
-* The back end repository cloned (from https://github.com/ImplyingProgramming/kamina-backend)
+* The back end repository cloned (https://github.com/ImplyingProgramming/kamina-backend)
 
 1. Install your python dependancies with:
 ```
@@ -58,7 +58,7 @@ python3 app.py
 ```
 4. Run the front end repository See the README there.
 
-Navigating to the frontend URL will allow you to use the application.
+Navigating to the frontend URL will allow you to use the application. Optionally, you can also interface with the backend from the terminal.
 
 ## API Documentation
 ----
