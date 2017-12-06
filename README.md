@@ -35,6 +35,31 @@ curl http://127.0.0.1:1337/api/get_threads
 #### Further reading
 [python-ipfs api documentation](https://ipfs.io/ipns/QmZ86ow1byeyhNRJEatWxGPJKcnQKG7s51MtbHdxxUddTH/Software/Python/ipfsapi/)
 
+## Installation
+
+There are 5 prerequisites for this tutorial:
+* python3 
+* pip3
+* ipfs (see https://ipfs.io/docs/install/)  
+* The front end repository cloned (https://github.com/ImplyingProgramming/kamina-frontend)
+* The back end repository cloned (from https://github.com/ImplyingProgramming/kamina-backend)
+
+1. Install your python dependancies with:
+```
+pip3 install -r requirements.txt
+```
+2. Open up a seperate terminal run the ipfs daemon. This can be done with:
+```
+ipfs daemon
+```
+3. Run the application with:
+```
+python3 app.py
+```
+4. Run the front end repository See the README there.
+
+Navigating to the frontend URL will allow you to use the application.
+
 ## API Documentation
 ----
 ### /api/make_thread 
