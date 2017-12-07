@@ -1,13 +1,17 @@
 import ipfsapi
 from ipfsapi.exceptions import StatusError
+from .images import ImagesUtils
+
 import json
 import io
 import random
+from datetime import datetime
 
 
 class IPFSUtils:
     def __init__(self):
         self.ipfs_instance = ipfsapi.connect()
+        self.img_utils = ImagesUtils
 
     @staticmethod
     def get_random_response_id():
@@ -16,7 +20,7 @@ class IPFSUtils:
             number += str(random.randint(1, 9))
         return number
 
-    def make_thread(self, title, content, image_hashes, post_id) -> str:
+    def make_thread(self, title, content, image_hashes, image_information, post_id) -> str:
         # We need to make a temporary json file, then add it to ipfs
         ipfs = self.ipfs_instance
         thread_dir = "/threads/" + post_id + "/"
@@ -25,8 +29,11 @@ class IPFSUtils:
             "title": title,
             "content": content,
             "post_id": post_id,
+            "user": "Anonymous",  # For now, until we have user functionality
             "response_id": response_id,
-            "image_hashes": image_hashes
+            "image_hashes": image_hashes,
+            "image_info": image_information,
+            "date_created": datetime.today().timestamp()
         }
         # Dump the thread_data list to a string for thread uploading to ipfs
         json_str = json.dumps(thread_data, indent=4)
