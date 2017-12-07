@@ -3,36 +3,32 @@ from flask_cors import CORS
 from utils.ipfs import IPFSUtils
 from utils.images import create_thumbnail
 
-class API():
-    '''
-    Base class for Kamina backend.
-    '''
 
+class API:
+    """
+    Base class for Kamina's backend.
+    """
     app = Flask(__name__)
     CORS(app)
     utils = IPFSUtils()
 
-
     def __init__(self):
-
         # Routes
-        routes = [{'r': '/api',              'm': ['GET'],  'f': self.index},
-                  {'r': '/api/',              'm': ['GET'], 'f': self.index},
-                  {'r': '/api/make_thread',  'm': ['POST'], 'f': self.make_thread},
-                  {'r': '/api/upload_image', 'm': ['POST'], 'f': self.upload_image},
-                  {'r': '/api/get_threads',  'm': ['GET'],  'f': self.get_threads},]
+        routes = [{"r": "/api",              "m": ["GET"],  "f": self.index},
+                  {"r": "/api/",             "m": ["GET"],  "f": self.index},
+                  {"r": "/api/make_thread",  "m": ["POST"], "f": self.make_thread},
+                  {"r": "/api/upload_image", "m": ["POST"], "f": self.upload_image},
+                  {"r": "/api/get_threads",  "m": ["GET"],  "f": self.get_threads}, ]
 
         for route in routes:
             self.add_route(route)
 
-
     def add_route(self, route):
-        self.app.add_url_rule(route['r'], view_func=route['f'], methods=route['m'])
+        self.app.add_url_rule(route["r"], view_func=route["f"], methods=route["m"])
 
-
-    def index(self):
+    @staticmethod
+    def index():
         return "Hi there\n"
-
 
     def make_thread(self):
         """
@@ -44,9 +40,8 @@ class API():
         body = escape(request.json["thread_content"])
         post_id = request.json["post_id"]
         image = request.json["thread_image_hashes"]
-        repsponse_id = self.utils.make_thread(title, body, image, post_id)
+        response_id = self.utils.make_thread(title, body, image, post_id)
         return response_id
-
 
     def upload_image(self):
         image_file = request.files["file"]
@@ -67,10 +62,10 @@ class API():
         }
         return jsonify(response)
 
-
     def get_threads(self):
         threads_json = self.utils.get_threads()
         return jsonify(threads_json)
+
 
 if __name__ == "__main__":
     # Run the server in a H4x0rZ port
