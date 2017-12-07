@@ -17,7 +17,6 @@ def make_thread():
     """
     We need the title of the thread, the thread body and possibly
     some media, for now just an image
-    TODO: add thumbnail functionality
     """
     # Thread information from request
     title = escape(request.json["thread_title"])
