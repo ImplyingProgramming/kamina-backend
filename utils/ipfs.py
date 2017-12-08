@@ -28,12 +28,12 @@ class IPFSUtils:
         thread_data = {
             "title": title,
             "content": content,
-            "post_id": post_id,
+            "post-id": post_id,
             "user": "Anonymous",  # For now, until we have user functionality
-            "response_id": response_id,
-            "image_hashes": image_hashes,
-            "image_info": image_information,
-            "date_created": datetime.today().timestamp()
+            "response-id": response_id,
+            "image-hashes": image_hashes,
+            "image-info": image_information,
+            "date-created": datetime.today().timestamp()
         }
         # Dump the thread_data list to a string for thread uploading to ipfs
         json_str = json.dumps(thread_data, indent=4)
