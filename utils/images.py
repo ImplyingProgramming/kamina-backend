@@ -6,8 +6,7 @@ import os
 
 class ImagesUtils:
     @staticmethod
-    def create_thumbnail(image, img_format) -> bytes:
-        size = (120, 120)  # Probably increase to a better size
+    def create_thumbnail(image, img_format: str, size: tuple) -> bytes:
         # This problem happens only when openning .JPG files
         try:
             im = Image.open(image).convert("RGB")
