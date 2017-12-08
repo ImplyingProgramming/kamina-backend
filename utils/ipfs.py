@@ -14,7 +14,7 @@ class IPFSUtils:
         self.img_utils = ImagesUtils
 
     @staticmethod
-    def get_random_response_id():
+    def get_random_response_id() -> str:
         number = ""
         for i in range(8):
             number += str(random.randint(1, 9))
@@ -46,7 +46,7 @@ class IPFSUtils:
     # TODO: Check for only images (mimetype)
     # We suppose we have a directory in the MFS called /images
     # The image should be a File like object
-    def upload_image(self, image, filename, post_id):
+    def upload_image(self, image, filename, post_id) -> str:
         ipfs = self.ipfs_instance
         # Some handy variables
         images_dir = "/images/" + post_id + "/"
@@ -63,15 +63,38 @@ class IPFSUtils:
         return img_mfs["Hash"]
 
     # Return a list of dictionaries containing the threads information
-    # TODO: Return sorted list (new threads, bumped threads, etc...)
     def get_threads(self) -> list:
         ipfs = self.ipfs_instance
         threads_list = []
-        threads_ids = ipfs.files_ls("/threads")
-        if threads_ids["Entries"] is not None:
-            for thread_id in threads_ids["Entries"]:
-                thread_mfs_path = "/threads/{}".format(thread_id["Name"])
-                thread_info_file = ipfs.files_ls(thread_mfs_path)["Entries"][0]["Name"]
-                json_file = json.loads(ipfs.files_read(thread_mfs_path + "/" + thread_info_file))
-                threads_list.append(json_file)
-        return threads_list
+        # We get a dictionary with a single key (Entries) which contains a list of all the IDs
+        try:
+            threads_ids = ipfs.files_ls("/threads")["Entries"]
+        except TypeError as e:
+            # We only get this if there are no threads
+            return threads_list
+        # Loop through the list
+        for thread_id in threads_ids:
+            # make a path in the form /threads/some_uuid4
+            thread_mfs_path = "/threads/{}".format(thread_id["Name"])
+            # We then again get a dictionary with a single key (Entries), access its content directly
+            thread_info_file = ipfs.files_ls(thread_mfs_path)["Entries"][0]["Name"]
+            # create a dictionary from a json-formatted string
+            json_file = json.loads(ipfs.files_read(thread_mfs_path + "/" + thread_info_file))
+            # append the new created dictionary
+            threads_list.append(json_file)
+        # Now sort the dictionary according to their creation date
+        # TODO: Make bumping functionality (somehow)
+        # Get all timestamps (There is probably a better way than doing this)
+        timestamps = []
+        sorted_thread_list = []
+        # Get a list of all the thread's timestamps
+        for thread in threads_list:
+            timestamps.append(thread["date-created"])
+        # Sort the timestamps in reverse
+        sorted_timestamps = sorted(timestamps, reverse=True)
+        for timestamp in sorted_timestamps:
+            for thread in threads_list:
+                # Check if the current thread has same timestamp, if so, push it
+                if thread["date-created"] == timestamp:
+                    sorted_thread_list.append(thread)
+        return sorted_thread_list
