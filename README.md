@@ -1,5 +1,5 @@
 # PyKamina
-![Kamina_Logo](kamina_logo.svg)
+![Kamina_Logo](kamina_logo.svg)  
 A Kamina backend using python and IPFS
 
 ## What is Kamina?
