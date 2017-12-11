@@ -104,3 +104,6 @@ __Arguments:__
 __Returns:__  
 A JSON-formatted list containing IPFS hashes of both the file and its thumbnail,
 and the information of the original image (size, dimensions, filename)
+
+----
+In memory of Miguel Vesga
