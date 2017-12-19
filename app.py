@@ -40,12 +40,19 @@ class API:
         title = escape(request.json["thread_title"])
         content = escape(request.json["thread_content"])
         post_id = request.json["post_id"]
-        image_hashes = request.json["thread_image_hashes"]
-        image_info = request.json["thread_image_info"]
+        try:
+            image_hashes = request.json["thread_image_hashes"]
+            image_info = request.json["thread_image_info"]
+        except KeyError:
+            image_hashes = {}
+            image_info = {}
         response_id = self.ipfs_utils.make_thread(title, content, image_hashes, image_info, post_id)
         return response_id
 
     def upload_image(self):
+        # Check if the user added an image
+        if not request.files.getlist("file[]"):
+            return jsonify({})
         image_file = request.files["file"]
         post_id = request.form["post_id"]
         # Original image data
