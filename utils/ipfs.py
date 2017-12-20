@@ -59,6 +59,11 @@ class IPFSUtils:
         ipfs = self.ipfs_instance
         # Some handy variables
         images_dir = "/images/" + post_id + "/"
+        # Create folder for image
+        try:
+            ipfs.files_mkdir(images_dir)
+        except StatusError:
+            pass
         img_location = images_dir + filename
         # Add the file to the MFS
         ipfs.files_write(img_location, io.BytesIO(image), create=True)
