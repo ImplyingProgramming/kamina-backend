@@ -19,7 +19,9 @@ class API:
                   {"r": "/api/",             "m": ["GET"],  "f": self.index},
                   {"r": "/api/make_thread",  "m": ["POST"], "f": self.make_thread},
                   {"r": "/api/upload_image", "m": ["POST"], "f": self.upload_image},
-                  {"r": "/api/get_threads",  "m": ["GET"],  "f": self.get_threads}, ]
+                  {"r": "/api/get_threads",  "m": ["GET"],  "f": self.get_threads},
+                  {"r": "/api/get_thread",   "m": ["POST"],  "f": self.get_thread},
+                  ]
 
         for route in routes:
             self.add_route(route)
@@ -78,6 +80,21 @@ class API:
     def get_threads(self):
         threads_json = self.ipfs_utils.get_threads()
         return jsonify(threads_json)
+
+    def get_thread(self):
+        # Invalid request
+        if "post_id" not in request.json.keys():
+            # 400 bad request
+            return jsonify({"err": "Post ID not provided in request"}), 400
+
+        thread_id = escape(request.json["post_id"])
+        try:
+            # Return json of threads
+            return jsonify(self.ipfs_utils.get_thread(thread_id))
+        except FileNotFoundError as err:
+            # Thread doesn't exist
+            # 404 not found
+            return jsonify({"err": "Thread with post id '" + thread_id + "' does not exist"}), 404
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ from .images import ImagesUtils
 import json
 import io
 import random
+import os, errno
 from datetime import datetime
 
 
@@ -105,3 +106,25 @@ class IPFSUtils:
                 if thread["date-created"] == timestamp:
                     sorted_thread_list.append(thread)
         return sorted_thread_list
+
+    def get_thread(self, post_id) -> str:
+
+        ipfs = self.ipfs_instance
+
+        # Gather list of entries in threads
+        thread_dir = None
+
+        for t_id in ipfs.files_ls("/threads")["Entries"]:
+            if t_id["Name"] == post_id:
+                thread_dir = "/threads/" + post_id + "/"
+                break
+
+        if thread_dir is None:
+            # thread doesn't exist
+            raise FileNotFoundError(
+                        errno.ENOENT, os.strerror(errno.ENOENT), post_id)
+
+        thread_info_file = ipfs.files_ls(thread_dir)["Entries"][0]["Name"]
+        json_file = json.loads(ipfs.files_read(thread_dir + "/" + thread_info_file).decode("utf-8"))
+
+        return json_file
