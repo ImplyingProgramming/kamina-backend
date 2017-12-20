@@ -12,9 +12,24 @@ class ImagesUtils:
             im = Image.open(image).convert("RGB")
         except IOError:
             im = Image.open(image)
-        im.thumbnail(size)
         bytes_img = io.BytesIO()
-        im.save(bytes_img, img_format)
+
+        # Saves image bytes into bytes_img buffer
+        # Use PNG as default thumbnail type, REQUIRED to preserve transperancy
+        if im.format == 'GIF':
+            # FIXME: PIL works poorly with transperant gifs. fix this at a later date
+            # Gather palette info of first frame of GIF
+            im.putpalette(im.getpalette())
+            # Create a new image with this palette, save it as PNG
+            new_im = Image.new("RGBA", im.size)
+            new_im.paste(im)
+            new_im.thumbnail(size)
+            new_im.save(bytes_img, format='PNG')
+        else:
+            im.thumbnail(size)
+            # TODO: Replace img_format with im.format ? What if a file has no extension?
+            im.save(bytes_img, format='PNG')
+
         return bytes_img.getvalue()
 
     @staticmethod
