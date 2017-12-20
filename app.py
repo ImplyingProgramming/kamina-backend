@@ -51,7 +51,7 @@ class API:
 
     def upload_image(self):
         # Check if the user added an image
-        if not request.files.getlist("file[]"):
+        if not request.files.getlist("file"):
             return jsonify({})
         image_file = request.files["file"]
         post_id = request.form["post_id"]
