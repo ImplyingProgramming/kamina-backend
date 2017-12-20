@@ -9,9 +9,18 @@ from datetime import datetime
 
 
 class IPFSUtils:
+    ipfs_instance = ipfsapi.connect()
+    img_utils = ImagesUtils
+
     def __init__(self):
-        self.ipfs_instance = ipfsapi.connect()
-        self.img_utils = ImagesUtils
+        ipfs = self.ipfs_instance
+        # Create needed folders inside the MFS
+        try:
+            ipfs.files_mkdir("/threads")
+            ipfs.files_mkdir("/images")
+        except StatusError:
+            # We get an error if the files already exist
+            pass
 
     @staticmethod
     def get_random_response_id() -> str:
@@ -51,11 +60,6 @@ class IPFSUtils:
         # Some handy variables
         images_dir = "/images/" + post_id + "/"
         img_location = images_dir + filename
-        # Create folder for images
-        try:
-            ipfs.files_mkdir(images_dir)
-        except StatusError as e:
-            pass
         # Add the file to the MFS
         ipfs.files_write(img_location, io.BytesIO(image), create=True)
         # Get image information from the MFS
@@ -67,10 +71,8 @@ class IPFSUtils:
         ipfs = self.ipfs_instance
         threads_list = []
         # We get a dictionary with a single key (Entries) which contains a list of all the IDs
-        try:
-            threads_ids = ipfs.files_ls("/threads")["Entries"]
-        except TypeError as e:
-            # We only get this if there are no threads
+        threads_ids = ipfs.files_ls("/threads")["Entries"]
+        if threads_ids is None:
             return threads_list
         # Loop through the list
         for thread_id in threads_ids:
@@ -78,8 +80,8 @@ class IPFSUtils:
             thread_mfs_path = "/threads/{}".format(thread_id["Name"])
             # We then again get a dictionary with a single key (Entries), access its content directly
             thread_info_file = ipfs.files_ls(thread_mfs_path)["Entries"][0]["Name"]
-            # create a dictionary from a json-formatted string
-            json_file = json.loads(ipfs.files_read(thread_mfs_path + "/" + thread_info_file))
+            # create a dictionary from a json-formatted (((string)))
+            json_file = json.loads(ipfs.files_read(thread_mfs_path + "/" + thread_info_file).decode("utf-8"))
             # append the new created dictionary
             threads_list.append(json_file)
         # Now sort the dictionary according to their creation date
