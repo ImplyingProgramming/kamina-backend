@@ -94,6 +94,20 @@ __Returns:__
 A JSON-formatted list containing all the existing threads' details
 
 ----
+### /api/get_thread
+Gets a thread based on a provided thread\_id
+
+__Arguments:__
+* post\_id: the uuid of an existing post
+
+__Returns:__  
+A JSON-formatted object containing the details of a thread
+
+_or_
+
+A JSON-formatted object containing an entry _err_, if there was an error in processing the request
+
+----
 ### /api/upload_image
 Upload an image to the IPFS node, and create a thumbnail of it
 

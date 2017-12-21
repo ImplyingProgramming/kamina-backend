@@ -105,3 +105,14 @@ class IPFSUtils:
                 if thread["date-created"] == timestamp:
                     sorted_thread_list.append(thread)
         return sorted_thread_list
+
+    def get_thread(self, post_id) -> str:
+
+        ipfs = self.ipfs_instance
+        thread_dir = "/threads/" + post_id + "/"
+
+        # raises ipfsapi.exceptions.ErrorResponse if file doesn't exist
+        thread_info_file = ipfs.files_ls(thread_dir)["Entries"][0]["Name"]
+        json_file = json.loads(ipfs.files_read(thread_dir + "/" + thread_info_file).decode("utf-8"))
+
+        return json_file

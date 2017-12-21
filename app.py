@@ -3,6 +3,8 @@ from flask_cors import CORS
 from utils.ipfs import IPFSUtils
 from utils.images import ImagesUtils
 
+from ipfsapi.exceptions import ErrorResponse
+
 
 class API:
     """
@@ -19,7 +21,9 @@ class API:
                   {"r": "/api/",             "m": ["GET"],  "f": self.index},
                   {"r": "/api/make_thread",  "m": ["POST"], "f": self.make_thread},
                   {"r": "/api/upload_image", "m": ["POST"], "f": self.upload_image},
-                  {"r": "/api/get_threads",  "m": ["GET"],  "f": self.get_threads}, ]
+                  {"r": "/api/get_threads",  "m": ["GET"],  "f": self.get_threads},
+                  {"r": "/api/get_thread",   "m": ["POST"],  "f": self.get_thread},
+                  ]
 
         for route in routes:
             self.add_route(route)
@@ -37,6 +41,8 @@ class API:
         some media, for now just an image
         """
         # Thread information from request
+        # FIXME I don't think flask.escape() is used for this, I think this would be escaping it twice
+        # I though flask.escape() was for escaping HTML, not JSON queries?
         title = escape(request.json["thread_title"])
         content = escape(request.json["thread_content"])
         post_id = request.json["post_id"]
@@ -78,6 +84,26 @@ class API:
     def get_threads(self):
         threads_json = self.ipfs_utils.get_threads()
         return jsonify(threads_json)
+
+    def get_thread(self):
+        # Invalid request
+        if "post_id" not in request.json.keys():
+            # 400 bad request
+            return jsonify({"err": "Post ID not provided in request"}), 400
+
+        thread_id = request.json["post_id"]
+        
+        # Empty post ID
+        if thread_id == "":
+            return jsonify({"err": "Thread with post id '" + thread_id + "' does not exist"}), 404
+
+        try:
+            # Return json of threads
+            return jsonify(self.ipfs_utils.get_thread(thread_id))
+        except ErrorResponse as err:
+            # Thread doesn't exist
+            # 404 not found
+            return jsonify({"err": "Thread with post id '" + thread_id + "' does not exist"}), 404
 
 
 if __name__ == "__main__":
