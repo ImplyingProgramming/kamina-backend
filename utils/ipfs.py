@@ -1,5 +1,6 @@
 import ipfsapi
 from ipfsapi.exceptions import StatusError
+from ipfsapi.exceptions import ErrorResponse
 from .images import ImagesUtils
 
 import json
@@ -106,13 +107,16 @@ class IPFSUtils:
                     sorted_thread_list.append(thread)
         return sorted_thread_list
 
-    def get_thread(self, post_id) -> str:
-
+    def get_thread(self, post_id) -> dict:
         ipfs = self.ipfs_instance
         thread_dir = "/threads/" + post_id + "/"
 
         # raises ipfsapi.exceptions.ErrorResponse if file doesn't exist
-        thread_info_file = ipfs.files_ls(thread_dir)["Entries"][0]["Name"]
-        json_file = json.loads(ipfs.files_read(thread_dir + "/" + thread_info_file).decode("utf-8"))
+        try:
+            thread_info_file = ipfs.files_ls(thread_dir)["Entries"][0]["Name"]
+            json_file = json.loads(ipfs.files_read(thread_dir + "/" + thread_info_file).decode("utf-8"))
+        except ErrorResponse:
+            # Thread doesn't exist
+            json_file = {"err": "Thread with post_id '{}' does not exist".format(post_id)}
 
         return json_file

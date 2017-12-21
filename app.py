@@ -3,8 +3,6 @@ from flask_cors import CORS
 from utils.ipfs import IPFSUtils
 from utils.images import ImagesUtils
 
-from ipfsapi.exceptions import ErrorResponse
-
 
 class API:
     """
@@ -17,13 +15,14 @@ class API:
 
     def __init__(self):
         # Routes
-        routes = [{"r": "/api",              "m": ["GET"],  "f": self.index},
-                  {"r": "/api/",             "m": ["GET"],  "f": self.index},
-                  {"r": "/api/make_thread",  "m": ["POST"], "f": self.make_thread},
-                  {"r": "/api/upload_image", "m": ["POST"], "f": self.upload_image},
-                  {"r": "/api/get_threads",  "m": ["GET"],  "f": self.get_threads},
-                  {"r": "/api/get_thread",   "m": ["POST"],  "f": self.get_thread},
-                  ]
+        routes = [
+            {"r": "/api",              "m": ["GET"],  "f": self.index},
+            {"r": "/api/",             "m": ["GET"],  "f": self.index},
+            {"r": "/api/make_thread",  "m": ["POST"], "f": self.make_thread},
+            {"r": "/api/upload_image", "m": ["POST"], "f": self.upload_image},
+            {"r": "/api/get_threads",  "m": ["GET"],  "f": self.get_threads},
+            {"r": "/api/get_thread",   "m": ["POST"],  "f": self.get_thread},
+        ]
 
         for route in routes:
             self.add_route(route)
@@ -90,20 +89,15 @@ class API:
         if "post_id" not in request.json.keys():
             # 400 bad request
             return jsonify({"err": "Post ID not provided in request"}), 400
-
         thread_id = request.json["post_id"]
-        
         # Empty post ID
         if thread_id == "":
             return jsonify({"err": "Thread with post id '" + thread_id + "' does not exist"}), 404
-
-        try:
-            # Return json of threads
-            return jsonify(self.ipfs_utils.get_thread(thread_id))
-        except ErrorResponse as err:
-            # Thread doesn't exist
-            # 404 not found
-            return jsonify({"err": "Thread with post id '" + thread_id + "' does not exist"}), 404
+        thread_json = self.ipfs_utils.get_thread(thread_id)
+        # If there is an error, return response code
+        if "err" in thread_json.keys():
+            return jsonify(thread_json), 404
+        return jsonify(thread_json)
 
 
 if __name__ == "__main__":
