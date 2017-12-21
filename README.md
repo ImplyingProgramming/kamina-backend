@@ -102,7 +102,9 @@ __Arguments:__
 
 __Returns:__  
 A JSON-formatted object containing the details of a thread
+
 _or_
+
 A JSON-formatted object containing an entry _err_, if there was an error in processing the request
 
 ----
