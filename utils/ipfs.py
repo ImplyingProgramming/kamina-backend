@@ -5,7 +5,6 @@ from .images import ImagesUtils
 import json
 import io
 import random
-import os, errno
 from datetime import datetime
 
 

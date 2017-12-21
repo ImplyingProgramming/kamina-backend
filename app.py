@@ -89,7 +89,12 @@ class API:
             # 400 bad request
             return jsonify({"err": "Post ID not provided in request"}), 400
 
-        thread_id = escape(request.json["post_id"])
+        thread_id = request.json["post_id"]
+        
+        # Empty post ID
+        if thread_id == "":
+            return jsonify({"err": "Thread with post id '" + thread_id + "' does not exist"}), 404
+
         try:
             # Return json of threads
             return jsonify(self.ipfs_utils.get_thread(thread_id))
