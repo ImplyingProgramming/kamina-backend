@@ -3,7 +3,6 @@ from flask_cors import CORS
 from utils.ipfs import IPFSUtils
 from utils.images import ImagesUtils
 
-from utils.debug import var_dump
 
 class API:
     """
