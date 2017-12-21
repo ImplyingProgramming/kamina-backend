@@ -110,20 +110,9 @@ class IPFSUtils:
     def get_thread(self, post_id) -> str:
 
         ipfs = self.ipfs_instance
+        thread_dir = "/threads/" + post_id + "/"
 
-        # Gather list of entries in threads
-        thread_dir = None
-
-        for t_id in ipfs.files_ls("/threads")["Entries"]:
-            if t_id["Name"] == post_id:
-                thread_dir = "/threads/" + post_id + "/"
-                break
-
-        if thread_dir is None:
-            # thread doesn't exist
-            raise FileNotFoundError(
-                        errno.ENOENT, os.strerror(errno.ENOENT), post_id)
-
+        # raises ipfsapi.exceptions.ErrorResponse if file doesn't exist
         thread_info_file = ipfs.files_ls(thread_dir)["Entries"][0]["Name"]
         json_file = json.loads(ipfs.files_read(thread_dir + "/" + thread_info_file).decode("utf-8"))
 

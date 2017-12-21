@@ -3,6 +3,8 @@ from flask_cors import CORS
 from utils.ipfs import IPFSUtils
 from utils.images import ImagesUtils
 
+from ipfsapi.exceptions import ErrorResponse
+
 
 class API:
     """
@@ -91,7 +93,7 @@ class API:
         try:
             # Return json of threads
             return jsonify(self.ipfs_utils.get_thread(thread_id))
-        except FileNotFoundError as err:
+        except ErrorResponse as err:
             # Thread doesn't exist
             # 404 not found
             return jsonify({"err": "Thread with post id '" + thread_id + "' does not exist"}), 404
