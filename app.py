@@ -86,7 +86,6 @@ class API:
         return jsonify(threads_json)
 
     def get_thread(self):
-        var_dump(request)
         # Invalid request
         if "post-id" not in request.values.keys():
             # 400 bad request
