@@ -41,6 +41,8 @@ class API:
         some media, for now just an image
         """
         # Thread information from request
+        # FIXME I don't think flask.escape() is used for this, I think this would be escaping it twice
+        # I though flask.escape() was for escaping HTML, not JSON queries?
         title = escape(request.json["thread_title"])
         content = escape(request.json["thread_content"])
         post_id = request.json["post_id"]
