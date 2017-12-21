@@ -3,6 +3,7 @@ from flask_cors import CORS
 from utils.ipfs import IPFSUtils
 from utils.images import ImagesUtils
 
+from utils.debug import var_dump
 
 class API:
     """
@@ -21,7 +22,7 @@ class API:
             {"r": "/api/make_thread",  "m": ["POST"], "f": self.make_thread},
             {"r": "/api/upload_image", "m": ["POST"], "f": self.upload_image},
             {"r": "/api/get_threads",  "m": ["GET"],  "f": self.get_threads},
-            {"r": "/api/get_thread",   "m": ["POST"],  "f": self.get_thread},
+            {"r": "/api/get_thread",   "m": ["GET"],  "f": self.get_thread},
         ]
 
         for route in routes:
@@ -85,14 +86,15 @@ class API:
         return jsonify(threads_json)
 
     def get_thread(self):
+        var_dump(request)
         # Invalid request
-        if "post_id" not in request.json.keys():
+        if "post-id" not in request.values.keys():
             # 400 bad request
             return jsonify({"err": "Post ID not provided in request"}), 400
-        thread_id = request.json["post_id"]
+        thread_id = request.values["post-id"]
         # Empty post ID
-        if thread_id == "":
-            return jsonify({"err": "Thread with post id '" + thread_id + "' does not exist"}), 404
+        if not thread_id:
+            return jsonify({"err": "Thread with post id '{}' does not exist".format(thread_id)}), 404
         thread_json = self.ipfs_utils.get_thread(thread_id)
         # If there is an error, return response code
         if "err" in thread_json.keys():
