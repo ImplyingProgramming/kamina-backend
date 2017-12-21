@@ -16,7 +16,7 @@ class ImagesUtils:
         # Saves image bytes into bytes_img buffer
         # Use PNG as default thumbnail type, REQUIRED to preserve transparency
         if im.format == "GIF":
-            # FIXME: PIL works poorly with transperant gifs. fix this at a later date
+            # FIXME: PIL works poorly with transparent gifs. fix this at a later date
             # Gather palette info of first frame of GIF
             im.putpalette(im.getpalette())
             # Create a new image with this palette, save it as PNG
