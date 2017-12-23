@@ -6,7 +6,7 @@ import os, hashlib
 
 class ImagesUtils:
     @staticmethod
-    def create_thumbnail(image, size: tuple, post_id: str) -> bytes:
+    def create_thumbnail(image, size: tuple) -> bytes:
     
         # storage for thumbnail bytes
         bytes_thmb = io.BytesIO() 

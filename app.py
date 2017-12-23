@@ -69,7 +69,7 @@ class API:
         image_information = self.img_utils.get_image_information(image_file, image_filename)
 
         # Thumbnail data
-        thumbnail_file = self.img_utils.create_thumbnail(image_file, (240, 240), post_id)
+        thumbnail_file = self.img_utils.create_thumbnail(image_file, (240, 240))
         thumbnail_filename = basename(image_filename) + "-thumbnail.png"
         thumbnail_ipfs_hash = self.ipfs_utils.upload_image(thumbnail_file, thumbnail_filename, post_id)
 
