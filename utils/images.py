@@ -21,14 +21,10 @@ class ImagesUtils:
 
     @staticmethod
     def get_image_information(image, img_filename) -> dict:
+        im = Image.open(image)
         information = {
-            "size": 0,  # Size in Kilobytes
-            "dimensions": None,  # A list [width, height],
+            "size": len(image.read()) / 1024,  # Size in Kilobytes
+            "dimensions": str(im.size[0]) + "x" + str(im.size[1]),  # A list [width, height],
             "filename": img_filename
         }
-        im = Image.open(image)
-        # calculate size of byte buffer in KB
-        information["size"] = len(image.read()) / 1024
-        # dimensions
-        information["dimensions"] = str(im.size[0]) + "x" + str(im.size[1])
         return information
