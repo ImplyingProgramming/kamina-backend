@@ -1,8 +1,5 @@
 from PIL import Image
-import ipfsapi
 import io
-import os, hashlib
-
 
 class ImagesUtils:
     @staticmethod
