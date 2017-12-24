@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, escape
 from flask_cors import CORS
 from utils.ipfs import IPFSUtils
 from utils.images import ImagesUtils
+from os.path import basename
 
 
 class API:
@@ -58,19 +59,20 @@ class API:
         # Check if the user added an image
         if not request.files.getlist("file"):
             return jsonify({})
+
         image_file = request.files["file"]
         post_id = request.form["post_id"]
+
         # Original image data
         image_filename = image_file.filename
-        image_extension = image_filename.split(".")[-1]
-        image_format = image_file.mimetype.split("/")[-1]
-        image_basename = image_filename[:-(len(image_extension) + 1)]  # Plus the dot (.)
         image_ipfs_hash = self.ipfs_utils.upload_image(image_file.read(), image_filename, post_id)
+        image_information = self.img_utils.get_image_information(image_file, image_filename)
+
         # Thumbnail data
-        thumbnail_file = self.img_utils.create_thumbnail(image_file, image_format, (240, 240))
-        thumbnail_filename = image_basename + "-thumbnail.jpg"
+        thumbnail_file = self.img_utils.create_thumbnail(image_file, (240, 240))
+        thumbnail_filename = basename(image_filename) + "-thumbnail.png"
         thumbnail_ipfs_hash = self.ipfs_utils.upload_image(thumbnail_file, thumbnail_filename, post_id)
-        image_information = self.img_utils.get_image_information(image_file, image_format, image_filename)
+
         response = [
             image_information,
             {
