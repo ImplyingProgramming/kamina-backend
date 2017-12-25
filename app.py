@@ -41,10 +41,9 @@ class API:
         some media, for now just an image
         """
         # Thread information from request
-        # FIXME I don't think flask.escape() is used for this, I think this would be escaping it twice
-        # I though flask.escape() was for escaping HTML, not JSON queries?
         title = escape(request.json["thread_title"])
         content = escape(request.json["thread_content"])
+        username = escape(request.json["thread_username"])
         post_id = request.json["post_id"]
         try:
             image_hashes = request.json["thread_image_hashes"]
@@ -52,7 +51,15 @@ class API:
         except KeyError:
             image_hashes = {}
             image_info = {}
-        response_id = self.ipfs_utils.make_thread(title, content, image_hashes, image_info, post_id)
+        user_input = {
+            "title": title,
+            "username": username,
+            "content": content,
+            "image_hashes": image_hashes,
+            "image_info": image_info,
+            "post_id": post_id
+        }
+        response_id = self.ipfs_utils.make_thread(user_input)
         return response_id
 
     def upload_image(self):
