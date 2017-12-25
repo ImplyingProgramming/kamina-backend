@@ -30,19 +30,19 @@ class IPFSUtils:
             number += str(random.randint(1, 9))
         return number
 
-    def make_thread(self, title, content, image_hashes, image_information, post_id) -> str:
+    def make_thread(self, user_input: dict) -> str:
         # We need to make a temporary json file, then add it to ipfs
         ipfs = self.ipfs_instance
-        thread_dir = "/threads/" + post_id + "/"
+        thread_dir = "/threads/" + user_input["post_id"] + "/"
         response_id = self.get_random_response_id()
         thread_data = {
-            "title": title,
-            "content": content,
-            "post-id": post_id,
-            "user": "Anonymous",  # For now, until we have user functionality
+            "title": user_input["title"],
+            "content": user_input["content"],
+            "post-id": user_input["post_id"],
+            "user": user_input["username"],
             "response-id": response_id,
-            "image-hashes": image_hashes,
-            "image-info": image_information,
+            "image-hashes": user_input["image_hashes"],
+            "image-info": user_input["image_information"],
             "date-created": datetime.today().timestamp()
         }
         # Dump the thread_data list to a string for thread uploading to ipfs
