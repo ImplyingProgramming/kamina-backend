@@ -42,7 +42,7 @@ class IPFSUtils:
             "user": user_input["username"],
             "response-id": response_id,
             "image-hashes": user_input["image_hashes"],
-            "image-info": user_input["image_information"],
+            "image-info": user_input["image_info"],
             "date-created": datetime.today().timestamp()
         }
         # Dump the thread_data list to a string for thread uploading to ipfs
